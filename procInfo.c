@@ -292,6 +292,44 @@ BOOL write_ListProcessModules(DWORD dwPID) {
     return(TRUE);
 }
 BOOL singleProcData(DWORD dwPID) {
+
+    HANDLE hProcessSnap;
+    HANDLE hProcess;
+    PROCESSENTRY32 pe32;
+    DWORD dwPriorityClass;
+
+    // Take a snapshot of all processes in the system.
+    hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hProcessSnap == INVALID_HANDLE_VALUE)
+    {
+        puts("\033[31mERORR - UNABLE TO MAKE PROCESS SNAPSHOT \n\033[0m ");
+        return(FALSE);
+    }
+    pe32.dwSize = sizeof(PROCESSENTRY32);
+
+    // Check if able to get first proccess if Error is Spawned exit [return(FALSE)].
+    if (!Process32First(hProcessSnap, &pe32))
+    {
+        CloseHandle(hProcessSnap);
+        return(FALSE);
+    }
+
+    do
+    {
+        if (dwPID == pe32.th32ProcessID) {
+            _tprintf(TEXT("\n-------------------- [PID:\033[31m%d\033[0m] --------------------"), pe32.th32ProcessID);
+            _tprintf(TEXT("\nProccess Name:  \033[36m%s\033[0m    "), pe32.szExeFile);
+            _tprintf(TEXT("\n  Process ID        = \033[32m 0x%08X\033[0m"), pe32.th32ProcessID);
+            _tprintf(TEXT("\n  Thread count      = \033[32m %d\033[0m"), pe32.cntThreads);
+            _tprintf(TEXT("\n  Parent process ID = \033[32m 0x%08X\033[0m"), pe32.th32ParentProcessID);
+            
+        }
+        
+
+    } while (Process32Next(hProcessSnap, &pe32));
+
+    CloseHandle(hProcessSnap);
+
     HANDLE hModuleSnap = INVALID_HANDLE_VALUE;
     MODULEENTRY32 me32;
 
@@ -314,13 +352,14 @@ BOOL singleProcData(DWORD dwPID) {
 
     do
     {
-        _tprintf(TEXT("\n\n     MODULE NAME:     %s"), me32.szModule);
-        _tprintf(TEXT("\n     Executable     = %s"), me32.szExePath);
-        _tprintf(TEXT("\n     Process ID     = 0x%08X"), me32.th32ProcessID);
-        _tprintf(TEXT("\n     Ref count (g)  = 0x%04X"), me32.GlblcntUsage);
-        _tprintf(TEXT("\n     Ref count (p)  = 0x%04X"), me32.ProccntUsage);
-        _tprintf(TEXT("\n     Base address   = 0x%08X"), (DWORD)me32.modBaseAddr);
-        _tprintf(TEXT("\n     Base size      = %d"), me32.modBaseSize);
+        _tprintf(TEXT("\n\n     MODULE NAME:     \033[36m%s\033[0m"), me32.szModule);
+        _tprintf(TEXT("\n     Executable     = \033[32m%s\033[0m"), me32.szExePath);
+        _tprintf(TEXT("\n     Process ID     =\033[32m 0x%08X\033[0m"), me32.th32ProcessID);
+        _tprintf(TEXT("\n     Ref count (g)  =\033[32m 0x%04X\033[0m"), me32.GlblcntUsage);
+        _tprintf(TEXT("\n     Ref count (p)  =\033[32m 0x%04X\033[0m"), me32.ProccntUsage);
+        _tprintf(TEXT("\n     Base address   =\033[32m 0x%08X\033[0m"), (DWORD)me32.modBaseAddr);
+        _tprintf(TEXT("\n     Base size      = \033[32m%d\033[0m"), me32.modBaseSize);
+        
 
     } while (Module32Next(hModuleSnap, &me32));
 

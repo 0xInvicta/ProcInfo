@@ -1,5 +1,7 @@
-#ifndef FUNCTIONS_H_INCLUDED
-#define FUNCTIONS_H_INCLUDED
+#ifndef ProcInfo
+#define ProcInfo
+
+
 #include <windows.h>
 #include <tlhelp32.h>
 #include <tchar.h>

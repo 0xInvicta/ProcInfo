@@ -1,7 +1,7 @@
 # ProcInfo
-Process Information Tool in C
+CLI Process Information Tool
 
-
+## Main Menu <br />
 ![main](screenshots/menu.png) <br />
 <br />
 ## Example of output: <br />

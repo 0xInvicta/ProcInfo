@@ -1,5 +1,5 @@
 # ProcInfo - CLI Process Information Tool
-By: Mateusz Peplinski
+By: Mateusz Peplinski <br />
       [In Progess]
 
 ## Main Menu <br />
